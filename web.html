@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Note Enhancer</title>
+<style>
+  :root {
+    --bg: #F7F7F5; --surface: #FFFFFF; --surface-alt: #F0F0ED;
+    --border: #E8E8E4; --text: #1A1A1A; --text-secondary: #4A4A4A;
+    --text-muted: #999999; --accent: #1D9E75; --accent-light: #E1F5EE;
+    --accent-text: #0F6E56; --danger: #A32D2D; --danger-light: #FCEBEB;
+    --purple: #3C3489; --purple-light: #EEEDFE;
+  }
+  .dark {
+    --bg: #0F0F0F; --surface: #1A1A1A; --surface-alt: #222222;
+    --border: #2E2E2E; --text: #F0F0ED; --text-secondary: #AAAAAA;
+    --text-muted: #555555; --accent: #1D9E75; --accent-light: #0D2E22;
+    --accent-text: #4ECDA4; --danger: #E05555; --danger-light: #2E1111;
+    --purple: #9F9BE8; --purple-light: #1E1C3A;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.2s, color 0.2s; }
+  a { color: var(--accent); }
+
+  /* Layout */
+  .app { max-width: 720px; margin: 0 auto; padding: 0 20px 80px; }
+
+  /* Header */
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 20px 0 32px; }
+  .logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+  .logo span { color: var(--accent); }
+  .toggle-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; width: 38px; height: 38px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+
+  /* Nav */
+  .nav { display: flex; gap: 8px; margin-bottom: 28px; }
+  .nav-btn { padding: 8px 18px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); font-size: 14px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+  .nav-btn.active { background: var(--accent-light); border-color: var(--accent); color: var(--accent-text); font-weight: 600; }
+  .nav-btn:hover:not(.active) { background: var(--surface-alt); }
+
+  /* Cards */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+  .card-label { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; }
+
+  /* Input area */
+  .input-row { display: flex; gap: 10px; margin-bottom: 14px; }
+  .input-type-btn { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 8px; cursor: pointer; text-align: center; font-family: inherit; transition: background 0.15s; }
+  .input-type-btn:hover { background: var(--surface-alt); }
+  .input-type-btn .icon { font-size: 20px; display: block; margin-bottom: 4px; }
+  .input-type-btn .label { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+  textarea { width: 100%; min-height: 140px; background: var(--surface-alt); border: 1px solid var(--border); border-radius: 10px; padding: 14px; font-size: 14px; font-family: inherit; color: var(--text); resize: vertical; outline: none; line-height: 1.6; transition: border-color 0.15s; }
+  textarea:focus { border-color: var(--accent); }
+  textarea::placeholder { color: var(--text-muted); }
+
+  /* Image preview */
+  .preview-wrap { position: relative; margin-bottom: 8px; }
+  .preview-img { width: 100%; max-height: 240px; object-fit: cover; border-radius: 10px; display: block; }
+  .remove-img { margin-top: 8px; background: none; border: none; color: var(--danger); font-size: 13px; cursor: pointer; font-family: inherit; padding: 4px 0; }
+
+  /* Mode toggles */
+  .modes-row { display: flex; gap: 8px; margin: 14px 0; flex-wrap: wrap; }
+  .mode-btn { padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); font-size: 13px; cursor: pointer; font-family: inherit; text-transform: capitalize; transition: all 0.15s; }
+  .mode-btn.active { background: var(--accent-light); border-color: var(--accent); color: var(--accent-text); }
+
+  /* Enhance button */
+  .enhance-btn { width: 100%; padding: 14px; background: var(--accent); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity 0.15s; }
+  .enhance-btn:hover { opacity: 0.9; }
+  .enhance-btn:disabled { opacity: 0.5; cursor: default; }
+
+  /* Save button */
+  .save-btn { background: var(--accent-light); color: var(--accent-text); border: 1px solid var(--accent); border-radius: 10px; padding: 8px 18px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; margin-bottom: 16px; }
+  .save-btn:hover { opacity: 0.85; }
+
+  /* Section headers */
+  .section-header { border-left: 3px solid var(--accent); padding-left: 10px; margin-bottom: 14px; }
+  .section-header.purple { border-color: var(--purple); }
+  .section-header.amber { border-color: #E5A020; }
+  .section-title { font-size: 17px; font-weight: 600; color: var(--text); }
+
+  /* Summary */
+  .body-text { font-size: 14px; line-height: 1.7; color: var(--text-secondary); }
+  .tags-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .tag { background: var(--accent-light); color: var(--accent-text); font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 20px; }
+
+  /* Flashcards */
+  .flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+  .flashcard { background: var(--purple-light); border: 1px solid var(--border); border-radius: 12px; padding: 18px; min-height: 90px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; transition: background 0.2s; }
+  .flashcard.flipped { background: var(--surface-alt); }
+  .flashcard-text { font-size: 13px; font-weight: 500; color: var(--purple); line-height: 1.5; }
+  .flashcard.flipped .flashcard-text { color: var(--text-secondary); font-weight: 400; }
+  .hint { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+
+  /* Quiz */
+  .quiz-q { margin-bottom: 20px; }
+  .quiz-q-text { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 10px; line-height: 1.5; }
+  .quiz-opt { width: 100%; text-align: left; padding: 11px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text-secondary); font-size: 13px; cursor: pointer; font-family: inherit; margin-bottom: 7px; transition: background 0.1s; }
+  .quiz-opt:hover:not(:disabled) { background: var(--surface-alt); }
+  .quiz-opt.correct { background: var(--accent-light); border-color: var(--accent); color: var(--accent-text); }
+  .quiz-opt.wrong { background: var(--danger-light); border-color: var(--danger); color: var(--danger); }
+
+  /* Saved notes */
+  .saved-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background 0.15s; }
+  .saved-card:hover { background: var(--surface-alt); }
+  .saved-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+  .saved-info { flex: 1; }
+  .saved-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .saved-date { font-size: 12px; color: var(--text-muted); }
+  .delete-btn { background: var(--danger-light); color: var(--danger); border: none; border-radius: 8px; padding: 6px 12px; font-size: 12px; cursor: pointer; font-family: inherit; font-weight: 500; }
+
+  /* Empty state */
+  .empty { text-align: center; padding: 60px 20px; }
+  .empty h3 { font-size: 18px; color: var(--text); margin-bottom: 8px; }
+  .empty p { font-size: 14px; color: var(--text-muted); }
+
+  /* Home screen */
+  .home-badge { display: inline-block; background: var(--accent-light); color: var(--accent-text); font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; }
+  .home-title { font-size: 52px; font-weight: 700; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 16px; }
+  .home-title span { color: var(--accent); }
+  .home-subtitle { font-size: 17px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 36px; max-width: 480px; }
+  .feature-row { display: flex; gap: 10px; margin-bottom: 36px; flex-wrap: wrap; }
+  .feature-chip { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; text-align: center; min-width: 80px; }
+  .feature-chip .icon { font-size: 20px; display: block; margin-bottom: 4px; }
+  .feature-chip .label { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+  .primary-btn { display: block; width: 100%; max-width: 320px; padding: 18px; background: var(--accent); color: white; border: none; border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: inherit; margin-bottom: 12px; text-align: center; transition: opacity 0.15s; }
+  .primary-btn:hover { opacity: 0.9; }
+  .secondary-btn { display: block; width: 100%; max-width: 320px; padding: 18px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 14px; font-size: 16px; font-weight: 500; cursor: pointer; font-family: inherit; text-align: center; transition: background 0.15s; }
+  .secondary-btn:hover { background: var(--surface-alt); }
+
+  .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  #file-input, #image-input { display: none; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="logo">Note <span>Enhancer</span></div>
+    <button class="toggle-btn" onclick="toggleDark()" id="dark-btn">🌙</button>
+  </div>
+
+  <div id="home-screen">
+    <div class="nav">
+      <button class="nav-btn active" onclick="showScreen('home')">Home</button>
+      <button class="nav-btn" onclick="showScreen('saved')">Saved (<span id="saved-count">0</span>)</button>
+    </div>
+    <div class="home-badge">AI-powered study tool</div>
+    <h1 class="home-title">Note<br><span>Enhancer</span></h1>
+    <p class="home-subtitle">Transform lecture notes into summaries, flashcards & quizzes — instantly.</p>
+    <div class="feature-row">
+      <div class="feature-chip"><span class="icon">📷</span><span class="label">Camera</span></div>
+      <div class="feature-chip"><span class="icon">🖼️</span><span class="label">Images</span></div>
+      <div class="feature-chip"><span class="icon">📄</span><span class="label">Files</span></div>
+      <div class="feature-chip"><span class="icon">✍️</span><span class="label">Text</span></div>
+    </div>
+    <button class="primary-btn" onclick="showScreen('enhance'); newNote()">+ New note</button>
+    <button class="secondary-btn" onclick="showScreen('saved')">Saved notes</button>
+  </div>
+
+  <div id="enhance-screen" style="display:none">
+    <div class="nav">
+      <button class="nav-btn" onclick="showScreen('home')">← Home</button>
+      <button class="nav-btn" onclick="showScreen('saved')">Saved (<span class="saved-count-badge">0</span>)</button>
+    </div>
+
+    <div class="input-row">
+      <button class="input-type-btn" onclick="document.getElementById('image-input').click()">
+        <span class="icon">📷</span><span class="label">Photo</span>
+      </button>
+      <button class="input-type-btn" onclick="document.getElementById('file-input').click()">
+        <span class="icon">📄</span><span class="label">File</span>
+      </button>
+    </div>
+    <input type="file" id="image-input" accept="image/*" onchange="handleImage(event)" />
+    <input type="file" id="file-input" accept=".txt" onchange="handleFile(event)" />
+
+    <div class="card">
+      <div class="card-label">Your Notes</div>
+      <div id="image-preview" style="display:none">
+        <div class="preview-wrap">
+          <img id="preview-img" class="preview-img" src="" alt="preview" />
+        </div>
+        <button class="remove-img" onclick="removeImage()">✕ Remove image</button>
+      </div>
+      <textarea id="notes-input" placeholder="Paste notes here, or use Photo / File above..."></textarea>
+      <div class="modes-row">
+        <button class="mode-btn active" data-mode="summary" onclick="toggleMode(this)">Summary</button>
+        <button class="mode-btn active" data-mode="flashcards" onclick="toggleMode(this)">Flashcards</button>
+        <button class="mode-btn active" data-mode="quiz" onclick="toggleMode(this)">Quiz</button>
+      </div>
+      <button class="enhance-btn" id="enhance-btn" onclick="enhance()">Enhance notes →</button>
+    </div>
+
+    <div id="results"></div>
+  </div>
+
+  <div id="saved-screen" style="display:none">
+    <div class="nav">
+      <button class="nav-btn" onclick="showScreen('home')">← Home</button>
+      <button class="nav-btn active">Saved (<span class="saved-count-badge">0</span>)</button>
+    </div>
+    <div id="saved-list"></div>
+  </div>
+</div>
+
+<script>
+const BACKEND_URL = 'https://note-enhancer-backend.vercel.app/api/enhance';
+let isDark = false;
+let currentImage = null;
+let savedNotes = JSON.parse(localStorage.getItem('saved_notes') || '[]');
+
+function updateCounts() {
+  document.querySelectorAll('#saved-count, .saved-count-badge').forEach(el => el.textContent = savedNotes.length);
+}
+updateCounts();
+
+function toggleDark() {
+  isDark = !isDark;
+  document.body.classList.toggle('dark', isDark);
+  document.getElementById('dark-btn').textContent = isDark ? '☀️' : '🌙';
+}
+
+function showScreen(name) {
+  ['home','enhance','saved'].forEach(s => {
+    document.getElementById(s + '-screen').style.display = s === name ? 'block' : 'none';
+  });
+  if (name === 'saved') renderSaved();
+}
+
+function newNote() {
+  document.getElementById('notes-input').value = '';
+  document.getElementById('results').innerHTML = '';
+  removeImage();
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.add('active'));
+}
+
+function toggleMode(btn) { btn.classList.toggle('active'); }
+
+function handleImage(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    currentImage = ev.target.result;
+    document.getElementById('preview-img').src = currentImage;
+    document.getElementById('image-preview').style.display = 'block';
+    document.getElementById('notes-input').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => { document.getElementById('notes-input').value = ev.target.result; };
+  reader.readAsText(file);
+}
+
+function removeImage() {
+  currentImage = null;
+  document.getElementById('image-preview').style.display = 'none';
+  document.getElementById('notes-input').style.display = 'block';
+  document.getElementById('image-input').value = '';
+}
+
+async function enhance() {
+  const notes = document.getElementById('notes-input').value.trim();
+  if (!notes && !currentImage) { alert('Please add notes or an image first!'); return; }
+
+  const activeModes = [...document.querySelectorAll('.mode-btn.active')].map(b => b.dataset.mode);
+  if (!activeModes.length) { alert('Select at least one output type.'); return; }
+
+  const btn = document.getElementById('enhance-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>Enhancing...';
+  document.getElementById('results').innerHTML = '';
+
+  const modeInstructions = [];
+  if (activeModes.includes('summary')) modeInstructions.push(`A "summary" object with: "text" (3-5 sentence summary), "concepts" (array of 4-6 key concept strings).`);
+  if (activeModes.includes('flashcards')) modeInstructions.push(`A "flashcards" array of 5 objects, each with "term" and "definition".`);
+  if (activeModes.includes('quiz')) modeInstructions.push(`A "quiz" array of 3 objects, each with "question", "options" (array of 4 strings), "answer" (0-indexed integer).`);
+
+  const instruction = `You are a study assistant. Generate ONLY a JSON object (no markdown) with:\n${modeInstructions.join('\n')}`;
+
+  try {
+    let messageContent;
+    if (currentImage) {
+      const base64 = currentImage.replace(/^data:image\/\w+;base64,/, '');
+      const mime = currentImage.match(/data:([^;]+)/)[1];
+      messageContent = [
+        { type: 'image', source: { type: 'base64', media_type: mime, data: base64 } },
+        { type: 'text', text: instruction }
+      ];
+    } else {
+      messageContent = [{ type: 'text', text: `${instruction}\n\nNotes:\n${notes}` }];
+    }
+
+    const res = await fetch(BACKEND_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: [{ role: 'user', content: messageContent }] })
+    });
+
+    const data = await res.json();
+    const text = (data.content || []).map(b => b.text || '').join('');
+    const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+    renderResults(parsed, notes);
+  } catch(e) {
+    alert('Something went wrong: ' + e);
+  }
+
+  btn.disabled = false;
+  btn.textContent = 'Enhance notes →';
+}
+
+function renderResults(data, notes) {
+  const el = document.getElementById('results');
+  el.innerHTML = '';
+
+  const saveBtn = document.createElement('button');
+  saveBtn.className = 'save-btn';
+  saveBtn.textContent = '💾 Save note';
+  saveBtn.onclick = () => saveNote(notes, data);
+  el.appendChild(saveBtn);
+
+  if (data.summary) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="section-header"><div class="section-title">Summary</div></div>
+      <p class="body-text">${data.summary.text}</p>
+      <div class="tags-row">${(data.summary.concepts || []).map(c => `<span class="tag">${c}</span>`).join('')}</div>`;
+    el.appendChild(card);
+  }
+
+  if (data.flashcards?.length) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="section-header purple"><div class="section-title">Flashcards</div></div>
+      <p class="hint">Click a card to flip it</p>
+      <div class="flashcard-grid">
+        ${data.flashcards.map(fc => `
+          <div class="flashcard" onclick="this.classList.toggle('flipped')" data-term="${fc.term}" data-def="${fc.definition}">
+            <span class="flashcard-text">${fc.term}</span>
+          </div>`).join('')}
+      </div>`;
+    card.querySelectorAll('.flashcard').forEach(fc => {
+      fc.addEventListener('click', function() {
+        const isFlipped = this.classList.contains('flipped');
+        this.querySelector('.flashcard-text').textContent = isFlipped ? this.dataset.def : this.dataset.term;
+      });
+    });
+    el.appendChild(card);
+  }
+
+  if (data.quiz?.length) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    let quizHTML = `<div class="section-header amber"><div class="section-title">Quiz</div></div>`;
+    data.quiz.forEach((q, qi) => {
+      quizHTML += `<div class="quiz-q"><p class="quiz-q-text">${qi + 1}. ${q.question}</p>`;
+      q.options.forEach((opt, oi) => {
+        quizHTML += `<button class="quiz-opt" data-qi="${qi}" data-oi="${oi}" data-correct="${q.answer}" onclick="answerQuiz(this)">${opt}</button>`;
+      });
+      quizHTML += `</div>`;
+    });
+    card.innerHTML = quizHTML;
+    el.appendChild(card);
+  }
+}
+
+function answerQuiz(btn) {
+  const qi = btn.dataset.qi;
+  const oi = parseInt(btn.dataset.oi);
+  const correct = parseInt(btn.dataset.correct);
+  document.querySelectorAll(`.quiz-opt[data-qi="${qi}"]`).forEach(b => b.disabled = true);
+  document.querySelectorAll(`.quiz-opt[data-qi="${qi}"][data-oi="${correct}"]`)[0].classList.add('correct');
+  if (oi !== correct) btn.classList.add('wrong');
+}
+
+function saveNote(notes, data) {
+  const note = {
+    id: Date.now().toString(),
+    title: notes.trim().split('\n')[0].slice(0, 40) || 'Image note',
+    notes, ...data,
+    date: new Date().toLocaleDateString()
+  };
+  savedNotes = [note, ...savedNotes];
+  localStorage.setItem('saved_notes', JSON.stringify(savedNotes));
+  updateCounts();
+  alert('Note saved!');
+}
+
+function renderSaved() {
+  const el = document.getElementById('saved-list');
+  if (!savedNotes.length) {
+    el.innerHTML = '<div class="empty"><h3>No saved notes yet.</h3><p>Enhance some notes and click Save!</p></div>';
+    return;
+  }
+  el.innerHTML = savedNotes.map(n => `
+    <div class="saved-card" onclick="loadNote('${n.id}')">
+      <div class="saved-dot"></div>
+      <div class="saved-info">
+        <div class="saved-title">${n.title}</div>
+        <div class="saved-date">${n.date}</div>
+      </div>
+      <button class="delete-btn" onclick="event.stopPropagation(); deleteNote('${n.id}')">Delete</button>
+    </div>`).join('');
+}
+
+function loadNote(id) {
+  const note = savedNotes.find(n => n.id === id);
+  if (!note) return;
+  document.getElementById('notes-input').value = note.notes || '';
+  showScreen('enhance');
+  renderResults(note, note.notes || '');
+}
+
+function deleteNote(id) {
+  if (!confirm('Delete this note?')) return;
+  savedNotes = savedNotes.filter(n => n.id !== id);
+  localStorage.setItem('saved_notes', JSON.stringify(savedNotes));
+  updateCounts();
+  renderSaved();
+}
+</script>
+</body>
+</html>
