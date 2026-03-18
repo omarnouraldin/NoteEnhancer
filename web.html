@@ -10,109 +10,127 @@
     --border: #E8E8E4; --text: #1A1A1A; --text-secondary: #4A4A4A;
     --text-muted: #999999; --accent: #1D9E75; --accent-light: #E1F5EE;
     --accent-text: #0F6E56; --danger: #A32D2D; --danger-light: #FCEBEB;
-    --purple: #3C3489; --purple-light: #EEEDFE;
+    --purple: #3C3489; --purple-light: #EEEDFE; --amber: #E5A020; --amber-light: #FAEEDA;
   }
-  .dark {
-    --bg: #0F0F0F; --surface: #1A1A1A; --surface-alt: #222222;
-    --border: #2E2E2E; --text: #F0F0ED; --text-secondary: #AAAAAA;
-    --text-muted: #555555; --accent: #1D9E75; --accent-light: #0D2E22;
-    --accent-text: #4ECDA4; --danger: #E05555; --danger-light: #2E1111;
-    --purple: #9F9BE8; --purple-light: #1E1C3A;
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0F0F0F; --surface: #1A1A1A; --surface-alt: #222222;
+      --border: #2E2E2E; --text: #F0F0ED; --text-secondary: #AAAAAA;
+      --text-muted: #555555; --accent: #1D9E75; --accent-light: #0D2E22;
+      --accent-text: #4ECDA4; --danger: #E05555; --danger-light: #2E1111;
+      --purple: #9F9BE8; --purple-light: #1E1C3A; --amber: #F0B429; --amber-light: #2D2000;
+    }
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background 0.2s, color 0.2s; }
-  a { color: var(--accent); }
-
-  /* Layout */
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
   .app { max-width: 720px; margin: 0 auto; padding: 0 20px 80px; }
 
-  /* Header */
   .topbar { display: flex; align-items: center; justify-content: space-between; padding: 20px 0 32px; }
   .logo { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
   .logo span { color: var(--accent); }
-  .toggle-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; width: 38px; height: 38px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+  .lang-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 6px 14px; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--text); font-family: inherit; }
 
-  /* Nav */
-  .nav { display: flex; gap: 8px; margin-bottom: 28px; }
+  .nav { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; }
   .nav-btn { padding: 8px 18px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); font-size: 14px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
   .nav-btn.active { background: var(--accent-light); border-color: var(--accent); color: var(--accent-text); font-weight: 600; }
   .nav-btn:hover:not(.active) { background: var(--surface-alt); }
 
-  /* Cards */
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 16px; }
   .card-label { font-size: 10px; font-weight: 700; letter-spacing: 1.2px; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; }
 
-  /* Input area */
+  .usage-wrap { margin-bottom: 20px; }
+  .usage-top { display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .usage-label { font-size: 12px; color: var(--text-muted); }
+  .usage-count { font-size: 12px; font-weight: 600; color: var(--accent); }
+  .usage-bar { height: 4px; background: var(--surface-alt); border-radius: 4px; overflow: hidden; }
+  .usage-fill { height: 100%; background: var(--accent); border-radius: 4px; transition: width 0.4s; }
+
   .input-row { display: flex; gap: 10px; margin-bottom: 14px; }
   .input-type-btn { flex: 1; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 8px; cursor: pointer; text-align: center; font-family: inherit; transition: background 0.15s; }
   .input-type-btn:hover { background: var(--surface-alt); }
   .input-type-btn .icon { font-size: 20px; display: block; margin-bottom: 4px; }
-  .input-type-btn .label { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
-  textarea { width: 100%; min-height: 140px; background: var(--surface-alt); border: 1px solid var(--border); border-radius: 10px; padding: 14px; font-size: 14px; font-family: inherit; color: var(--text); resize: vertical; outline: none; line-height: 1.6; transition: border-color 0.15s; }
+  .input-type-btn .lbl { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+
+  .notes-wrap { position: relative; }
+  textarea { width: 100%; min-height: 140px; background: var(--surface-alt); border: 1px solid var(--border); border-radius: 10px; padding: 14px 14px 32px 14px; font-size: 14px; font-family: inherit; color: var(--text); resize: vertical; outline: none; line-height: 1.6; transition: border-color 0.15s; }
   textarea:focus { border-color: var(--accent); }
   textarea::placeholder { color: var(--text-muted); }
+  .word-count { position: absolute; bottom: 10px; right: 12px; font-size: 11px; color: var(--text-muted); pointer-events: none; }
 
-  /* Image preview */
-  .preview-wrap { position: relative; margin-bottom: 8px; }
-  .preview-img { width: 100%; max-height: 240px; object-fit: cover; border-radius: 10px; display: block; }
-  .remove-img { margin-top: 8px; background: none; border: none; color: var(--danger); font-size: 13px; cursor: pointer; font-family: inherit; padding: 4px 0; }
+  .preview-img { width: 100%; max-height: 240px; object-fit: cover; border-radius: 10px; display: block; margin-bottom: 8px; }
+  .remove-img { background: none; border: none; color: var(--danger); font-size: 13px; cursor: pointer; font-family: inherit; padding: 4px 0; }
 
-  /* Mode toggles */
+  .subject-row { display: flex; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
+  .subject-btn { padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); font-size: 12px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+  .subject-btn.active { background: var(--amber-light); border-color: var(--amber); color: var(--amber); }
+
+  .count-row { display: flex; align-items: center; gap: 10px; margin: 10px 0; flex-wrap: wrap; }
+  .count-label { font-size: 12px; color: var(--text-muted); min-width: 80px; }
+  .count-btn { padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); font-size: 12px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+  .count-btn.active { background: var(--purple-light); border-color: var(--purple); color: var(--purple); }
+
   .modes-row { display: flex; gap: 8px; margin: 14px 0; flex-wrap: wrap; }
-  .mode-btn { padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); font-size: 13px; cursor: pointer; font-family: inherit; text-transform: capitalize; transition: all 0.15s; }
+  .mode-btn { padding: 6px 16px; border-radius: 20px; border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); font-size: 13px; cursor: pointer; font-family: inherit; transition: all 0.15s; }
   .mode-btn.active { background: var(--accent-light); border-color: var(--accent); color: var(--accent-text); }
 
-  /* Enhance button */
   .enhance-btn { width: 100%; padding: 14px; background: var(--accent); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity 0.15s; }
   .enhance-btn:hover { opacity: 0.9; }
   .enhance-btn:disabled { opacity: 0.5; cursor: default; }
 
-  /* Save button */
-  .save-btn { background: var(--accent-light); color: var(--accent-text); border: 1px solid var(--accent); border-radius: 10px; padding: 8px 18px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; margin-bottom: 16px; }
-  .save-btn:hover { opacity: 0.85; }
+  .loading-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 40px 20px; margin-bottom: 16px; text-align: center; }
+  .loading-spinner { width: 40px; height: 40px; border: 3px solid var(--surface-alt); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px; }
+  .loading-msg { font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  .loading-sub { font-size: 13px; color: var(--text-muted); }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* Section headers */
+  .save-btn { background: var(--accent-light); color: var(--accent-text); border: 1px solid var(--accent); border-radius: 10px; padding: 8px 18px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; margin-bottom: 16px; margin-right: 8px; }
+  .copy-btn { background: var(--surface-alt); color: var(--text-secondary); border: 1px solid var(--border); border-radius: 10px; padding: 8px 18px; font-size: 14px; cursor: pointer; font-family: inherit; margin-bottom: 16px; transition: all 0.15s; }
+  .copy-btn:hover { background: var(--accent-light); color: var(--accent-text); border-color: var(--accent); }
+
   .section-header { border-left: 3px solid var(--accent); padding-left: 10px; margin-bottom: 14px; }
   .section-header.purple { border-color: var(--purple); }
-  .section-header.amber { border-color: #E5A020; }
+  .section-header.amber { border-color: var(--amber); }
   .section-title { font-size: 17px; font-weight: 600; color: var(--text); }
 
-  /* Summary */
   .body-text { font-size: 14px; line-height: 1.7; color: var(--text-secondary); }
   .tags-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
   .tag { background: var(--accent-light); color: var(--accent-text); font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 20px; }
 
-  /* Flashcards */
-  .flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
-  .flashcard { background: var(--purple-light); border: 1px solid var(--border); border-radius: 12px; padding: 18px; min-height: 90px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; transition: background 0.2s; }
+  .flashcard-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+  .flashcard { background: var(--purple-light); border: 1px solid var(--border); border-radius: 12px; padding: 16px; min-height: 80px; cursor: pointer; display: flex; align-items: center; justify-content: center; text-align: center; transition: background 0.2s; }
   .flashcard.flipped { background: var(--surface-alt); }
-  .flashcard-text { font-size: 13px; font-weight: 500; color: var(--purple); line-height: 1.5; }
+  .flashcard-text { font-size: 13px; font-weight: 500; color: var(--purple); line-height: 1.4; }
   .flashcard.flipped .flashcard-text { color: var(--text-secondary); font-weight: 400; }
   .hint { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
 
-  /* Quiz */
   .quiz-q { margin-bottom: 20px; }
   .quiz-q-text { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 10px; line-height: 1.5; }
   .quiz-opt { width: 100%; text-align: left; padding: 11px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text-secondary); font-size: 13px; cursor: pointer; font-family: inherit; margin-bottom: 7px; transition: background 0.1s; }
   .quiz-opt:hover:not(:disabled) { background: var(--surface-alt); }
   .quiz-opt.correct { background: var(--accent-light); border-color: var(--accent); color: var(--accent-text); }
   .quiz-opt.wrong { background: var(--danger-light); border-color: var(--danger); color: var(--danger); }
+  .quiz-score { background: var(--accent-light); border: 1px solid var(--accent); border-radius: 12px; padding: 14px 18px; margin-top: 16px; text-align: center; font-size: 15px; font-weight: 600; color: var(--accent-text); display: none; }
 
-  /* Saved notes */
+  .ask-ai-wrap { margin-top: 8px; }
+  .ask-ai-input-row { display: flex; gap: 8px; margin-top: 10px; }
+  .ask-ai-input { flex: 1; padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-family: inherit; background: var(--surface-alt); color: var(--text); outline: none; }
+  .ask-ai-input:focus { border-color: var(--accent); }
+  .ask-ai-btn { padding: 10px 18px; background: var(--accent); color: white; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; white-space: nowrap; }
+  .ask-ai-btn:disabled { opacity: 0.5; cursor: default; }
+  .ask-ai-response { margin-top: 12px; padding: 14px; background: var(--surface-alt); border-radius: 10px; font-size: 14px; line-height: 1.7; color: var(--text-secondary); display: none; }
+
   .saved-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: background 0.15s; }
   .saved-card:hover { background: var(--surface-alt); }
   .saved-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
   .saved-info { flex: 1; }
   .saved-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
-  .saved-date { font-size: 12px; color: var(--text-muted); }
-  .delete-btn { background: var(--danger-light); color: var(--danger); border: none; border-radius: 8px; padding: 6px 12px; font-size: 12px; cursor: pointer; font-family: inherit; font-weight: 500; }
+  .saved-meta { font-size: 12px; color: var(--text-muted); }
+  .delete-btn { background: var(--danger-light); color: var(--danger); border: none; border-radius: 8px; padding: 6px 12px; font-size: 12px; cursor: pointer; font-family: inherit; font-weight: 500; flex-shrink: 0; }
 
-  /* Empty state */
   .empty { text-align: center; padding: 60px 20px; }
   .empty h3 { font-size: 18px; color: var(--text); margin-bottom: 8px; }
   .empty p { font-size: 14px; color: var(--text-muted); }
 
-  /* Home screen */
   .home-badge { display: inline-block; background: var(--accent-light); color: var(--accent-text); font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 20px; margin-bottom: 20px; }
   .home-title { font-size: 52px; font-weight: 700; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 16px; }
   .home-title span { color: var(--accent); }
@@ -120,14 +138,33 @@
   .feature-row { display: flex; gap: 10px; margin-bottom: 36px; flex-wrap: wrap; }
   .feature-chip { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; text-align: center; min-width: 80px; }
   .feature-chip .icon { font-size: 20px; display: block; margin-bottom: 4px; }
-  .feature-chip .label { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
+  .feature-chip .lbl { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
   .primary-btn { display: block; width: 100%; max-width: 320px; padding: 18px; background: var(--accent); color: white; border: none; border-radius: 14px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: inherit; margin-bottom: 12px; text-align: center; transition: opacity 0.15s; }
   .primary-btn:hover { opacity: 0.9; }
-  .secondary-btn { display: block; width: 100%; max-width: 320px; padding: 18px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 14px; font-size: 16px; font-weight: 500; cursor: pointer; font-family: inherit; text-align: center; transition: background 0.15s; }
+  .secondary-btn { display: block; width: 100%; max-width: 320px; padding: 18px; background: var(--surface); color: var(--text); border: 1px solid var(--border); border-radius: 14px; font-size: 16px; font-weight: 500; cursor: pointer; font-family: inherit; text-align: center; transition: background 0.15s; margin-bottom: 12px; }
   .secondary-btn:hover { background: var(--surface-alt); }
 
-  .spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+  .recent-section { margin-bottom: 32px; }
+  .recent-title { font-size: 13px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 12px; text-transform: uppercase; }
+  .recent-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; cursor: pointer; transition: background 0.15s; display: flex; align-items: center; gap: 10px; }
+  .recent-card:hover { background: var(--surface-alt); }
+  .recent-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+  .recent-info { flex: 1; }
+  .recent-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .recent-sub { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+  .modal { background: var(--surface); border-radius: 20px; padding: 32px; max-width: 480px; width: 100%; border: 1px solid var(--border); }
+  .modal-icon { font-size: 40px; text-align: center; margin-bottom: 16px; }
+  .modal-title { font-size: 22px; font-weight: 700; color: var(--text); margin-bottom: 8px; text-align: center; }
+  .modal-subtitle { font-size: 15px; color: var(--text-secondary); text-align: center; line-height: 1.6; margin-bottom: 24px; }
+  .modal-input { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; font-family: inherit; background: var(--surface-alt); color: var(--text); outline: none; margin-bottom: 10px; }
+  .modal-input:focus { border-color: var(--accent); }
+  .modal-btn { width: 100%; padding: 14px; background: var(--accent); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; font-family: inherit; margin-bottom: 10px; transition: opacity 0.15s; }
+  .modal-btn:hover { opacity: 0.9; }
+  .modal-btn.secondary { background: var(--surface-alt); color: var(--text); border: 1px solid var(--border); }
+  .modal-divider { text-align: center; font-size: 13px; color: var(--text-muted); margin: 16px 0; }
+  .modal-feedback-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
 
   #file-input, #image-input { display: none; }
 </style>
@@ -136,105 +173,367 @@
 <div class="app">
   <div class="topbar">
     <div class="logo">Note <span>Enhancer</span></div>
-    <button class="toggle-btn" onclick="toggleDark()" id="dark-btn">🌙</button>
+    <button class="lang-btn" onclick="toggleLang()" id="lang-btn">日本語</button>
   </div>
 
+  <!-- HOME -->
   <div id="home-screen">
     <div class="nav">
-      <button class="nav-btn active" onclick="showScreen('home')">Home</button>
-      <button class="nav-btn" onclick="showScreen('saved')">Saved (<span id="saved-count">0</span>)</button>
+      <button class="nav-btn active" id="nav-home" onclick="showScreen('home')"></button>
+      <button class="nav-btn" id="nav-saved" onclick="showScreen('saved')"></button>
     </div>
-    <div class="home-badge">AI-powered study tool</div>
+    <div class="home-badge" id="home-badge"></div>
     <h1 class="home-title">Note<br><span>Enhancer</span></h1>
-    <p class="home-subtitle">Transform lecture notes into summaries, flashcards & quizzes — instantly.</p>
+    <p class="home-subtitle" id="home-subtitle"></p>
     <div class="feature-row">
-      <div class="feature-chip"><span class="icon">📷</span><span class="label">Camera</span></div>
-      <div class="feature-chip"><span class="icon">🖼️</span><span class="label">Images</span></div>
-      <div class="feature-chip"><span class="icon">📄</span><span class="label">Files</span></div>
-      <div class="feature-chip"><span class="icon">✍️</span><span class="label">Text</span></div>
+      <div class="feature-chip"><span class="icon">🖼️</span><span class="lbl" id="feat-photo"></span></div>
+      <div class="feature-chip"><span class="icon">📄</span><span class="lbl" id="feat-file"></span></div>
+      <div class="feature-chip"><span class="icon">✍️</span><span class="lbl" id="feat-text"></span></div>
+      <div class="feature-chip"><span class="icon">🤖</span><span class="lbl" id="feat-ai"></span></div>
     </div>
-    <button class="primary-btn" onclick="showScreen('enhance'); newNote()">+ New note</button>
-    <button class="secondary-btn" onclick="showScreen('saved')">Saved notes</button>
+    <div class="recent-section" id="recent-section" style="display:none">
+      <div class="recent-title" id="recent-title"></div>
+      <div id="recent-list"></div>
+    </div>
+    <button class="primary-btn" id="btn-new" onclick="showScreen('enhance'); newNote()"></button>
+    <button class="secondary-btn" id="btn-saved" onclick="showScreen('saved')"></button>
   </div>
 
+  <!-- ENHANCE -->
   <div id="enhance-screen" style="display:none">
     <div class="nav">
-      <button class="nav-btn" onclick="showScreen('home')">← Home</button>
-      <button class="nav-btn" onclick="showScreen('saved')">Saved (<span class="saved-count-badge">0</span>)</button>
+      <button class="nav-btn" onclick="showScreen('home')" id="nav-back"></button>
+      <button class="nav-btn active" id="nav-enhance-label"></button>
+    </div>
+
+    <div class="usage-wrap">
+      <div class="usage-top">
+        <span class="usage-label" id="usage-label"></span>
+        <span class="usage-count" id="usage-count"></span>
+      </div>
+      <div class="usage-bar"><div class="usage-fill" id="usage-fill"></div></div>
     </div>
 
     <div class="input-row">
       <button class="input-type-btn" onclick="document.getElementById('image-input').click()">
-        <span class="icon">📷</span><span class="label">Photo</span>
+        <span class="icon">🖼️</span><span class="lbl" id="btn-photo"></span>
       </button>
       <button class="input-type-btn" onclick="document.getElementById('file-input').click()">
-        <span class="icon">📄</span><span class="label">File</span>
+        <span class="icon">📄</span><span class="lbl" id="btn-file"></span>
       </button>
     </div>
     <input type="file" id="image-input" accept="image/*" onchange="handleImage(event)" />
     <input type="file" id="file-input" accept=".txt" onchange="handleFile(event)" />
 
     <div class="card">
-      <div class="card-label">Your Notes</div>
+      <div class="card-label" id="label-notes"></div>
       <div id="image-preview" style="display:none">
-        <div class="preview-wrap">
-          <img id="preview-img" class="preview-img" src="" alt="preview" />
-        </div>
-        <button class="remove-img" onclick="removeImage()">✕ Remove image</button>
+        <img id="preview-img" class="preview-img" src="" alt="preview" />
+        <button class="remove-img" onclick="removeImage()" id="btn-remove-img"></button>
       </div>
-      <textarea id="notes-input" placeholder="Paste notes here, or use Photo / File above..."></textarea>
+      <div class="notes-wrap" id="notes-wrap">
+        <textarea id="notes-input" oninput="updateWordCount()" rows="6"></textarea>
+        <span class="word-count" id="word-count">0</span>
+      </div>
+
+      <div class="card-label" style="margin-top:16px" id="label-subject"></div>
+      <div class="subject-row" id="subject-row"></div>
+
       <div class="modes-row">
-        <button class="mode-btn active" data-mode="summary" onclick="toggleMode(this)">Summary</button>
-        <button class="mode-btn active" data-mode="flashcards" onclick="toggleMode(this)">Flashcards</button>
-        <button class="mode-btn active" data-mode="quiz" onclick="toggleMode(this)">Quiz</button>
+        <button class="mode-btn active" data-mode="summary" onclick="toggleMode(this)" id="mode-summary"></button>
+        <button class="mode-btn active" data-mode="flashcards" onclick="toggleMode(this)" id="mode-flashcards"></button>
+        <button class="mode-btn active" data-mode="quiz" onclick="toggleMode(this)" id="mode-quiz"></button>
       </div>
-      <button class="enhance-btn" id="enhance-btn" onclick="enhance()">Enhance notes →</button>
+
+      <div class="count-row" id="fc-count-row">
+        <span class="count-label" id="fc-label"></span>
+        <button class="count-btn active" data-fc="3" onclick="setFcCount(this)">3</button>
+        <button class="count-btn" data-fc="5" onclick="setFcCount(this)">5</button>
+        <button class="count-btn" data-fc="10" onclick="setFcCount(this)">10</button>
+      </div>
+
+      <div class="count-row" id="quiz-count-row">
+        <span class="count-label" id="quiz-label"></span>
+        <button class="count-btn active" data-qz="5" onclick="setQzCount(this)">5</button>
+        <button class="count-btn" data-qz="10" onclick="setQzCount(this)">10</button>
+        <button class="count-btn" data-qz="20" onclick="setQzCount(this)">20</button>
+      </div>
+
+      <button class="enhance-btn" id="enhance-btn" onclick="enhance()"></button>
+    </div>
+
+    <div id="loading-area" style="display:none">
+      <div class="loading-card">
+        <div class="loading-spinner"></div>
+        <div class="loading-msg" id="loading-msg"></div>
+        <div class="loading-sub" id="loading-sub"></div>
+      </div>
     </div>
 
     <div id="results"></div>
   </div>
 
+  <!-- SAVED -->
   <div id="saved-screen" style="display:none">
     <div class="nav">
-      <button class="nav-btn" onclick="showScreen('home')">← Home</button>
-      <button class="nav-btn active">Saved (<span class="saved-count-badge">0</span>)</button>
+      <button class="nav-btn" onclick="showScreen('home')" id="nav-back-saved"></button>
+      <button class="nav-btn active" id="nav-saved-label"></button>
     </div>
     <div id="saved-list"></div>
   </div>
 </div>
 
+<!-- LIMIT MODAL -->
+<div class="modal-overlay" id="limit-modal" style="display:none">
+  <div class="modal">
+    <div class="modal-icon">🔒</div>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-subtitle" id="modal-subtitle"></div>
+    <input class="modal-input" type="email" id="waitlist-email" />
+    <button class="modal-btn" id="modal-join-btn" onclick="joinWaitlist()"></button>
+    <div class="modal-divider" id="modal-divider"></div>
+    <div class="modal-feedback-title" id="modal-feedback-title"></div>
+    <select class="modal-input" id="feedback-type">
+      <option value="idea" id="fb-idea"></option>
+      <option value="bug" id="fb-bug"></option>
+      <option value="other" id="fb-other"></option>
+    </select>
+    <textarea class="modal-input" id="feedback-text" rows="3"></textarea>
+    <button class="modal-btn" id="modal-feedback-btn" onclick="sendFeedback()"></button>
+    <button class="modal-btn secondary" id="modal-close-btn" onclick="closeModal()"></button>
+  </div>
+</div>
+
 <script>
-const BACKEND_URL = 'https://note-enhancer-backend.vercel.app/api/enhance';
-let isDark = false;
+const BACKEND = 'https://note-enhancer-backend.vercel.app/api/enhance';
+const MAX_USES = 3;
+const EMAIL = 'omarnourelden3@gmail.com';
+
+let lang = navigator.language.startsWith('ja') ? 'ja' : 'en';
+let fcCount = 3;
+let qzCount = 5;
 let currentImage = null;
 let savedNotes = JSON.parse(localStorage.getItem('saved_notes') || '[]');
+let usageCount = parseInt(localStorage.getItem('usage_count') || '0');
+let currentData = null;
+let currentNotes = '';
+let quizAnswered = {};
+let quizTotal = 0;
 
-function updateCounts() {
-  document.querySelectorAll('#saved-count, .saved-count-badge').forEach(el => el.textContent = savedNotes.length);
+const T = {
+  en: {
+    badge: 'AI-powered study tool',
+    subtitle: 'Transform lecture notes into summaries, flashcards & quizzes — instantly.',
+    navHome: 'Home', navSaved: 'Saved', navBack: '← Home', navEnhance: 'New Note',
+    navSavedLabel: 'Saved Notes', navBackSaved: '← Home',
+    btnNew: '+ New Note', btnSaved: 'Saved Notes',
+    featPhoto: 'Photos', featFile: 'Files', featText: 'Text', featAI: 'AI',
+    recentTitle: 'Recently Used',
+    usageLabel: 'Free uses remaining', 
+    btnPhoto: 'Photo', btnFile: 'File',
+    labelNotes: 'Your Notes', labelSubject: 'Subject',
+    modeSummary: 'Summary', modeFlashcards: 'Flashcards', modeQuiz: 'Quiz',
+    fcLabel: 'Flashcards', quizLabel: 'Questions',
+    enhanceBtn: 'Enhance Notes →',
+    removeImg: '✕ Remove image',
+    wordCount: (n) => `${n} words`,
+    subjects: ['📚 General','🔬 Science','📐 Math','📖 History','💻 CS','🗣️ Language'],
+    loadingMsgs: [
+      ['📖 Reading your notes...', 'Hang tight, this takes a few seconds'],
+      ['🧠 Analysing content...', 'Finding the key concepts'],
+      ['✍️ Generating flashcards...', 'Making them short and simple'],
+      ['📝 Building your quiz...', 'Almost there!'],
+      ['⚡ Almost done...', 'Just a few more seconds!'],
+    ],
+    summaryTitle: 'Summary', flashcardsTitle: 'Flashcards', quizTitle: 'Quiz',
+    flipHint: 'Click a card to flip it',
+    saveBtn: '💾 Save Note', copyBtn: '📋 Copy Summary',
+    copiedBtn: '✅ Copied!',
+    askTitle: '💬 Ask AI',
+    askPlaceholder: 'Ask anything about these notes...',
+    askBtn: 'Ask',
+    score: (c, t) => `You got ${c}/${t} correct! ${c === t ? '🎉 Perfect!' : c >= t/2 ? '👍 Good job!' : '📖 Keep studying!'}`,
+    modalTitle: "You've used all 3 free enhancements",
+    modalSubtitle: "Join the waitlist to get early access when we launch — and help us improve with your feedback!",
+    waitlistPlaceholder: 'Enter your email',
+    joinBtn: 'Join Waitlist',
+    divider: '— or leave feedback —',
+    feedbackTitle: 'Ideas, bugs, or suggestions',
+    fbIdea: '💡 Idea / Suggestion', fbBug: '🐛 Bug Report', fbOther: '💬 Other',
+    feedbackPlaceholder: 'Tell us what you think...',
+    feedbackBtn: 'Send Feedback',
+    closeBtn: 'Maybe later',
+    savedEmpty: "No saved notes yet.", savedEmptySub: "Enhance some notes and click Save!",
+    deleteConfirm: 'Delete this note?',
+  },
+  ja: {
+    badge: 'AI搭載の学習ツール',
+    subtitle: 'ノートを要約・フラッシュカード・クイズに瞬時に変換します。',
+    navHome: 'ホーム', navSaved: '保存済み', navBack: '← ホーム', navEnhance: '新しいノート',
+    navSavedLabel: '保存済みノート', navBackSaved: '← ホーム',
+    btnNew: '+ 新しいノート', btnSaved: '保存済みノート',
+    featPhoto: '写真', featFile: 'ファイル', featText: 'テキスト', featAI: 'AI',
+    recentTitle: '最近使用',
+    usageLabel: '残り無料使用回数',
+    btnPhoto: '写真', btnFile: 'ファイル',
+    labelNotes: 'ノート', labelSubject: '科目',
+    modeSummary: '要約', modeFlashcards: 'フラッシュカード', modeQuiz: 'クイズ',
+    fcLabel: 'カード枚数', quizLabel: '問題数',
+    enhanceBtn: 'ノートを強化する →',
+    removeImg: '✕ 画像を削除',
+    wordCount: (n) => `${n} 語`,
+    subjects: ['📚 一般','🔬 理科','📐 数学','📖 歴史','💻 CS','🗣️ 語学'],
+    loadingMsgs: [
+      ['📖 ノートを読み込んでいます...', 'しばらくお待ちください'],
+      ['🧠 内容を分析中...', 'キーワードを見つけています'],
+      ['✍️ フラッシュカードを生成中...', 'シンプルにまとめています'],
+      ['📝 クイズを作成中...', 'もう少しです！'],
+      ['⚡ もうすぐ完了...', 'あと数秒です！'],
+    ],
+    summaryTitle: '要約', flashcardsTitle: 'フラッシュカード', quizTitle: 'クイズ',
+    flipHint: 'カードをクリックして裏返す',
+    saveBtn: '💾 保存', copyBtn: '📋 要約をコピー',
+    copiedBtn: '✅ コピーしました！',
+    askTitle: '💬 AIに質問',
+    askPlaceholder: 'このノートについて何でも聞いてください...',
+    askBtn: '質問する',
+    score: (c, t) => `${t}問中${c}問正解！ ${c === t ? '🎉 満点！' : c >= t/2 ? '👍 よくできました！' : '📖 もっと勉強しよう！'}`,
+    modalTitle: '3回の無料使用を使い切りました',
+    modalSubtitle: 'ウェイトリストに登録して、リリース時に早期アクセスを取得しましょう！',
+    waitlistPlaceholder: 'メールアドレスを入力',
+    joinBtn: 'ウェイトリストに登録',
+    divider: '— またはフィードバックを送る —',
+    feedbackTitle: 'アイデア・バグ・提案',
+    fbIdea: '💡 アイデア・提案', fbBug: '🐛 バグ報告', fbOther: '💬 その他',
+    feedbackPlaceholder: 'ご意見をお聞かせください...',
+    feedbackBtn: 'フィードバックを送る',
+    closeBtn: 'あとで',
+    savedEmpty: 'まだ保存されたノートがありません。', savedEmptySub: 'ノートを強化して保存してください！',
+    deleteConfirm: 'このノートを削除しますか？',
+  }
+};
+
+function t(key, ...args) {
+  const val = T[lang][key];
+  return typeof val === 'function' ? val(...args) : val;
 }
-updateCounts();
 
-function toggleDark() {
-  isDark = !isDark;
-  document.body.classList.toggle('dark', isDark);
-  document.getElementById('dark-btn').textContent = isDark ? '☀️' : '🌙';
+function applyLang() {
+  const isJa = lang === 'ja';
+  document.getElementById('lang-btn').textContent = isJa ? 'English' : '日本語';
+  document.getElementById('home-badge').textContent = t('badge');
+  document.getElementById('home-subtitle').textContent = t('subtitle');
+  document.getElementById('nav-home').textContent = t('navHome');
+  document.getElementById('nav-saved').textContent = `${t('navSaved')} (${savedNotes.length})`;
+  document.getElementById('nav-back').textContent = t('navBack');
+  document.getElementById('nav-enhance-label').textContent = t('navEnhance');
+  document.getElementById('nav-back-saved').textContent = t('navBackSaved');
+  document.getElementById('nav-saved-label').textContent = t('navSavedLabel');
+  document.getElementById('btn-new').textContent = t('btnNew');
+  document.getElementById('btn-saved').textContent = `${t('btnSaved')} (${savedNotes.length})`;
+  document.getElementById('feat-photo').textContent = t('featPhoto');
+  document.getElementById('feat-file').textContent = t('featFile');
+  document.getElementById('feat-text').textContent = t('featText');
+  document.getElementById('feat-ai').textContent = t('featAI');
+  document.getElementById('recent-title').textContent = t('recentTitle');
+  document.getElementById('usage-label').textContent = t('usageLabel');
+  document.getElementById('btn-photo').textContent = t('btnPhoto');
+  document.getElementById('btn-file').textContent = t('btnFile');
+  document.getElementById('label-notes').textContent = t('labelNotes');
+  document.getElementById('label-subject').textContent = t('labelSubject');
+  document.getElementById('mode-summary').textContent = t('modeSummary');
+  document.getElementById('mode-flashcards').textContent = t('modeFlashcards');
+  document.getElementById('mode-quiz').textContent = t('modeQuiz');
+  document.getElementById('fc-label').textContent = t('fcLabel');
+  document.getElementById('quiz-label').textContent = t('quizLabel');
+  document.getElementById('enhance-btn').textContent = t('enhanceBtn');
+  document.getElementById('btn-remove-img').textContent = t('removeImg');
+  document.getElementById('notes-input').placeholder = isJa ? 'ノートをここに貼り付けてください...' : 'Paste notes here, or use Photo / File above...';
+  document.getElementById('modal-title').textContent = t('modalTitle');
+  document.getElementById('modal-subtitle').textContent = t('modalSubtitle');
+  document.getElementById('waitlist-email').placeholder = t('waitlistPlaceholder');
+  document.getElementById('modal-join-btn').textContent = t('joinBtn');
+  document.getElementById('modal-divider').textContent = t('divider');
+  document.getElementById('modal-feedback-title').textContent = t('feedbackTitle');
+  document.getElementById('fb-idea').textContent = t('fbIdea');
+  document.getElementById('fb-bug').textContent = t('fbBug');
+  document.getElementById('fb-other').textContent = t('fbOther');
+  document.getElementById('feedback-text').placeholder = t('feedbackPlaceholder');
+  document.getElementById('modal-feedback-btn').textContent = t('feedbackBtn');
+  document.getElementById('modal-close-btn').textContent = t('closeBtn');
+
+  // subjects
+  const subjects = t('subjects');
+  const subjectRow = document.getElementById('subject-row');
+  subjectRow.innerHTML = '';
+  subjects.forEach((s, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'subject-btn' + (i === 0 ? ' active' : '');
+    btn.textContent = s;
+    btn.onclick = () => {
+      document.querySelectorAll('.subject-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    };
+    subjectRow.appendChild(btn);
+  });
+
+  updateUsageUI();
+  renderRecent();
+}
+
+function toggleLang() {
+  lang = lang === 'en' ? 'ja' : 'en';
+  applyLang();
+}
+
+function updateUsageUI() {
+  const remaining = Math.max(0, MAX_USES - usageCount);
+  document.getElementById('usage-count').textContent = `${remaining}/${MAX_USES}`;
+  document.getElementById('usage-fill').style.width = `${(remaining / MAX_USES) * 100}%`;
 }
 
 function showScreen(name) {
-  ['home','enhance','saved'].forEach(s => {
+  ['home', 'enhance', 'saved'].forEach(s => {
     document.getElementById(s + '-screen').style.display = s === name ? 'block' : 'none';
   });
   if (name === 'saved') renderSaved();
+  if (name === 'home') renderRecent();
 }
 
 function newNote() {
   document.getElementById('notes-input').value = '';
   document.getElementById('results').innerHTML = '';
+  document.getElementById('loading-area').style.display = 'none';
+  document.getElementById('word-count').textContent = '0';
   removeImage();
   document.querySelectorAll('.mode-btn').forEach(b => b.classList.add('active'));
+  currentData = null; currentNotes = ''; quizAnswered = {}; quizTotal = 0;
 }
 
-function toggleMode(btn) { btn.classList.toggle('active'); }
+function toggleMode(btn) {
+  btn.classList.toggle('active');
+  const fcActive = document.querySelector('[data-mode="flashcards"]').classList.contains('active');
+  const qzActive = document.querySelector('[data-mode="quiz"]').classList.contains('active');
+  document.getElementById('fc-count-row').style.display = fcActive ? 'flex' : 'none';
+  document.getElementById('quiz-count-row').style.display = qzActive ? 'flex' : 'none';
+}
+
+function setFcCount(btn) {
+  document.querySelectorAll('[data-fc]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  fcCount = parseInt(btn.dataset.fc);
+}
+
+function setQzCount(btn) {
+  document.querySelectorAll('[data-qz]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  qzCount = parseInt(btn.dataset.qz);
+}
+
+function updateWordCount() {
+  const words = document.getElementById('notes-input').value.trim().split(/\s+/).filter(w => w).length;
+  document.getElementById('word-count').textContent = t('wordCount', words);
+}
 
 function handleImage(e) {
   const file = e.target.files[0];
@@ -244,7 +543,7 @@ function handleImage(e) {
     currentImage = ev.target.result;
     document.getElementById('preview-img').src = currentImage;
     document.getElementById('image-preview').style.display = 'block';
-    document.getElementById('notes-input').style.display = 'none';
+    document.getElementById('notes-wrap').style.display = 'none';
   };
   reader.readAsDataURL(file);
 }
@@ -253,33 +552,52 @@ function handleFile(e) {
   const file = e.target.files[0];
   if (!file) return;
   const reader = new FileReader();
-  reader.onload = ev => { document.getElementById('notes-input').value = ev.target.result; };
+  reader.onload = ev => { document.getElementById('notes-input').value = ev.target.result; updateWordCount(); };
   reader.readAsText(file);
 }
 
 function removeImage() {
   currentImage = null;
   document.getElementById('image-preview').style.display = 'none';
-  document.getElementById('notes-input').style.display = 'block';
+  document.getElementById('notes-wrap').style.display = 'block';
   document.getElementById('image-input').value = '';
+}
+
+let loadingInterval = null;
+function startLoadingMessages() {
+  const msgs = t('loadingMsgs');
+  let i = 0;
+  document.getElementById('loading-msg').textContent = msgs[0][0];
+  document.getElementById('loading-sub').textContent = msgs[0][1];
+  loadingInterval = setInterval(() => {
+    i = (i + 1) % msgs.length;
+    document.getElementById('loading-msg').textContent = msgs[i][0];
+    document.getElementById('loading-sub').textContent = msgs[i][1];
+  }, 2000);
+}
+function stopLoadingMessages() {
+  clearInterval(loadingInterval);
 }
 
 async function enhance() {
   const notes = document.getElementById('notes-input').value.trim();
-  if (!notes && !currentImage) { alert('Please add notes or an image first!'); return; }
+  if (!notes && !currentImage) { alert(lang === 'ja' ? 'ノートか画像を追加してください！' : 'Please add notes or an image first!'); return; }
+
+  if (usageCount >= MAX_USES) { showModal(); return; }
 
   const activeModes = [...document.querySelectorAll('.mode-btn.active')].map(b => b.dataset.mode);
-  if (!activeModes.length) { alert('Select at least one output type.'); return; }
+  if (!activeModes.length) { alert(lang === 'ja' ? '出力タイプを選択してください。' : 'Please select at least one output type.'); return; }
 
   const btn = document.getElementById('enhance-btn');
   btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>Enhancing...';
   document.getElementById('results').innerHTML = '';
+  document.getElementById('loading-area').style.display = 'block';
+  startLoadingMessages();
 
   const modeInstructions = [];
-  if (activeModes.includes('summary')) modeInstructions.push(`A "summary" object with: "text" (3-5 sentence summary), "concepts" (array of 4-6 key concept strings).`);
-  if (activeModes.includes('flashcards')) modeInstructions.push(`A "flashcards" array of 5 objects, each with "term" and "definition".`);
-  if (activeModes.includes('quiz')) modeInstructions.push(`A "quiz" array of 3 objects, each with "question", "options" (array of 4 strings), "answer" (0-indexed integer).`);
+  if (activeModes.includes('summary')) modeInstructions.push(`A "summary" object with: "text" (3-5 sentence summary), "concepts" (array of 4-6 short key concept strings, max 3 words each).`);
+  if (activeModes.includes('flashcards')) modeInstructions.push(`A "flashcards" array of exactly ${fcCount} objects. Each with "term" (1-4 words max) and "definition" (one simple sentence, max 12 words). Keep both extremely short and simple.`);
+  if (activeModes.includes('quiz')) modeInstructions.push(`A "quiz" array of exactly ${qzCount} objects, each with "question", "options" (array of 4 strings), "answer" (0-indexed integer).`);
 
   const instruction = `You are a study assistant. Generate ONLY a JSON object (no markdown) with:\n${modeInstructions.join('\n')}`;
 
@@ -296,39 +614,70 @@ async function enhance() {
       messageContent = [{ type: 'text', text: `${instruction}\n\nNotes:\n${notes}` }];
     }
 
-    const res = await fetch(BACKEND_URL, {
+    const res = await fetch(BACKEND, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: [{ role: 'user', content: messageContent }] })
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 2000, messages: [{ role: 'user', content: messageContent }] })
     });
 
     const data = await res.json();
     const text = (data.content || []).map(b => b.text || '').join('');
     const parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
+
+    usageCount++;
+    localStorage.setItem('usage_count', usageCount);
+    updateUsageUI();
+
+    currentData = parsed;
+    currentNotes = notes;
+    quizAnswered = {};
+    quizTotal = parsed.quiz?.length || 0;
+
+    stopLoadingMessages();
+    document.getElementById('loading-area').style.display = 'none';
     renderResults(parsed, notes);
   } catch(e) {
+    stopLoadingMessages();
+    document.getElementById('loading-area').style.display = 'none';
     alert('Something went wrong: ' + e);
   }
 
   btn.disabled = false;
-  btn.textContent = 'Enhance notes →';
+  btn.textContent = t('enhanceBtn');
 }
 
 function renderResults(data, notes) {
   const el = document.getElementById('results');
   el.innerHTML = '';
 
+  const actionRow = document.createElement('div');
+  actionRow.style.cssText = 'display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;';
+
   const saveBtn = document.createElement('button');
   saveBtn.className = 'save-btn';
-  saveBtn.textContent = '💾 Save note';
+  saveBtn.textContent = t('saveBtn');
   saveBtn.onclick = () => saveNote(notes, data);
-  el.appendChild(saveBtn);
+
+  const copyBtn = document.createElement('button');
+  copyBtn.className = 'copy-btn';
+  copyBtn.textContent = t('copyBtn');
+  copyBtn.onclick = () => {
+    if (data.summary) {
+      navigator.clipboard.writeText(data.summary.text);
+      copyBtn.textContent = t('copiedBtn');
+      setTimeout(() => copyBtn.textContent = t('copyBtn'), 2000);
+    }
+  };
+
+  actionRow.appendChild(saveBtn);
+  if (data.summary) actionRow.appendChild(copyBtn);
+  el.appendChild(actionRow);
 
   if (data.summary) {
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
-      <div class="section-header"><div class="section-title">Summary</div></div>
+      <div class="section-header"><div class="section-title">${t('summaryTitle')}</div></div>
       <p class="body-text">${data.summary.text}</p>
       <div class="tags-row">${(data.summary.concepts || []).map(c => `<span class="tag">${c}</span>`).join('')}</div>`;
     el.appendChild(card);
@@ -338,18 +687,18 @@ function renderResults(data, notes) {
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
-      <div class="section-header purple"><div class="section-title">Flashcards</div></div>
-      <p class="hint">Click a card to flip it</p>
+      <div class="section-header purple"><div class="section-title">${t('flashcardsTitle')}</div></div>
+      <p class="hint">${t('flipHint')}</p>
       <div class="flashcard-grid">
         ${data.flashcards.map(fc => `
-          <div class="flashcard" onclick="this.classList.toggle('flipped')" data-term="${fc.term}" data-def="${fc.definition}">
+          <div class="flashcard" data-term="${fc.term}" data-def="${fc.definition}">
             <span class="flashcard-text">${fc.term}</span>
           </div>`).join('')}
       </div>`;
     card.querySelectorAll('.flashcard').forEach(fc => {
       fc.addEventListener('click', function() {
-        const isFlipped = this.classList.contains('flipped');
-        this.querySelector('.flashcard-text').textContent = isFlipped ? this.dataset.def : this.dataset.term;
+        this.classList.toggle('flipped');
+        this.querySelector('.flashcard-text').textContent = this.classList.contains('flipped') ? this.dataset.def : this.dataset.term;
       });
     });
     el.appendChild(card);
@@ -358,45 +707,146 @@ function renderResults(data, notes) {
   if (data.quiz?.length) {
     const card = document.createElement('div');
     card.className = 'card';
-    let quizHTML = `<div class="section-header amber"><div class="section-title">Quiz</div></div>`;
+    const scoreId = 'quiz-score-' + Date.now();
+    let quizHTML = `<div class="section-header amber"><div class="section-title">${t('quizTitle')}</div></div>`;
     data.quiz.forEach((q, qi) => {
       quizHTML += `<div class="quiz-q"><p class="quiz-q-text">${qi + 1}. ${q.question}</p>`;
       q.options.forEach((opt, oi) => {
-        quizHTML += `<button class="quiz-opt" data-qi="${qi}" data-oi="${oi}" data-correct="${q.answer}" onclick="answerQuiz(this)">${opt}</button>`;
+        quizHTML += `<button class="quiz-opt" data-qi="${qi}" data-oi="${oi}" data-correct="${q.answer}" data-score="${scoreId}" onclick="answerQuiz(this)">${opt}</button>`;
       });
       quizHTML += `</div>`;
     });
+    quizHTML += `<div class="quiz-score" id="${scoreId}"></div>`;
     card.innerHTML = quizHTML;
     el.appendChild(card);
   }
+
+  // Ask AI
+  const askCard = document.createElement('div');
+  askCard.className = 'card ask-ai-wrap';
+  askCard.innerHTML = `
+    <div class="section-header" style="border-color:#E5A020"><div class="section-title">${t('askTitle')}</div></div>
+    <div class="ask-ai-input-row">
+      <input class="ask-ai-input" id="ask-input" placeholder="${t('askPlaceholder')}" onkeydown="handleAskEnter(event)" />
+      <button class="ask-ai-btn" id="ask-btn" onclick="askAI()">${t('askBtn')}</button>
+    </div>
+    <div class="ask-ai-response" id="ask-response"></div>`;
+  el.appendChild(askCard);
+// Waitlist banner
+  const remaining = Math.max(0, MAX_USES - usageCount);
+  const banner = document.createElement('div');
+  banner.style.cssText = `
+    background: var(--accent-light);
+    border: 1px solid var(--accent);
+    border-radius: 14px;
+    padding: 16px 20px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  `;
+  banner.innerHTML = `
+    <div>
+      <div style="font-size:14px;font-weight:600;color:var(--accent-text)">
+        ${lang === 'ja' ? `残り ${remaining} 回の無料使用` : `${remaining} free use${remaining === 1 ? '' : 's'} remaining`}
+      </div>
+      <div style="font-size:12px;color:var(--accent-text);opacity:0.8;margin-top:2px">
+        ${lang === 'ja' ? '気に入りましたか？ウェイトリストに登録して無制限アクセスを。' : 'Enjoying it? Join the waitlist for unlimited access.'}
+      </div>
+    </div>
+    <button onclick="showModal()" style="
+      background:var(--accent);
+      color:white;
+      border:none;
+      border-radius:10px;
+      padding:8px 16px;
+      font-size:13px;
+      font-weight:600;
+      cursor:pointer;
+      font-family:inherit;
+      white-space:nowrap;
+    ">${lang === 'ja' ? '登録する →' : 'Join waitlist →'}</button>
+  `;
+  el.appendChild(banner);  
 }
 
 function answerQuiz(btn) {
   const qi = btn.dataset.qi;
   const oi = parseInt(btn.dataset.oi);
   const correct = parseInt(btn.dataset.correct);
+  const scoreId = btn.dataset.score;
   document.querySelectorAll(`.quiz-opt[data-qi="${qi}"]`).forEach(b => b.disabled = true);
   document.querySelectorAll(`.quiz-opt[data-qi="${qi}"][data-oi="${correct}"]`)[0].classList.add('correct');
   if (oi !== correct) btn.classList.add('wrong');
+
+  if (!quizAnswered[qi]) {
+    quizAnswered[qi] = oi === correct;
+  }
+
+  if (Object.keys(quizAnswered).length === quizTotal) {
+    const correct_count = Object.values(quizAnswered).filter(Boolean).length;
+    const scoreEl = document.getElementById(scoreId);
+    if (scoreEl) {
+      scoreEl.textContent = t('score', correct_count, quizTotal);
+      scoreEl.style.display = 'block';
+    }
+  }
+}
+function handleAskEnter(e) {
+  if (e.key === 'Enter' && !e.isComposing) askAI();
+}
+async function askAI() {
+  const input = document.getElementById('ask-input');
+  const question = input.value.trim();
+  if (!question) return;
+  const btn = document.getElementById('ask-btn');
+  const responseEl = document.getElementById('ask-response');
+  btn.disabled = true;
+  btn.textContent = '...';
+  responseEl.style.display = 'block';
+  responseEl.textContent = lang === 'ja' ? '考え中...' : 'Thinking...';
+
+  try {
+    const context = currentNotes ? `Context from notes:\n${currentNotes}\n\n` : '';
+    const res = await fetch(BACKEND, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514', max_tokens: 500,
+        messages: [{ role: 'user', content: `${context}Student question: ${question}\n\nAnswer simply and clearly in ${lang === 'ja' ? 'Japanese' : 'English'}, in 2-3 sentences max.` }]
+      })
+    });
+    const data = await res.json();
+    responseEl.textContent = (data.content || []).map(b => b.text || '').join('');
+    input.value = '';
+  } catch(e) {
+    responseEl.textContent = lang === 'ja' ? 'エラーが発生しました。' : 'Something went wrong.';
+  }
+  btn.disabled = false;
+  btn.textContent = t('askBtn');
 }
 
 function saveNote(notes, data) {
+  const subject = document.querySelector('.subject-btn.active')?.textContent || '';
   const note = {
     id: Date.now().toString(),
     title: notes.trim().split('\n')[0].slice(0, 40) || 'Image note',
-    notes, ...data,
+    subject, notes, ...data,
     date: new Date().toLocaleDateString()
   };
   savedNotes = [note, ...savedNotes];
   localStorage.setItem('saved_notes', JSON.stringify(savedNotes));
-  updateCounts();
-  alert('Note saved!');
+  document.getElementById('nav-saved').textContent = `${t('navSaved')} (${savedNotes.length})`;
+  document.getElementById('btn-saved').textContent = `${t('btnSaved')} (${savedNotes.length})`;
+  alert(lang === 'ja' ? '保存しました！' : 'Note saved!');
 }
 
 function renderSaved() {
   const el = document.getElementById('saved-list');
   if (!savedNotes.length) {
-    el.innerHTML = '<div class="empty"><h3>No saved notes yet.</h3><p>Enhance some notes and click Save!</p></div>';
+    el.innerHTML = `<div class="empty"><h3>${t('savedEmpty')}</h3><p>${t('savedEmptySub')}</p></div>`;
     return;
   }
   el.innerHTML = savedNotes.map(n => `
@@ -404,9 +854,25 @@ function renderSaved() {
       <div class="saved-dot"></div>
       <div class="saved-info">
         <div class="saved-title">${n.title}</div>
-        <div class="saved-date">${n.date}</div>
+        <div class="saved-meta">${n.subject ? n.subject + ' · ' : ''}${n.date}</div>
       </div>
-      <button class="delete-btn" onclick="event.stopPropagation(); deleteNote('${n.id}')">Delete</button>
+      <button class="delete-btn" onclick="event.stopPropagation(); deleteNote('${n.id}')">${lang === 'ja' ? '削除' : 'Delete'}</button>
+    </div>`).join('');
+}
+
+function renderRecent() {
+  const recent = savedNotes.slice(0, 3);
+  const section = document.getElementById('recent-section');
+  const list = document.getElementById('recent-list');
+  if (!recent.length) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+  list.innerHTML = recent.map(n => `
+    <div class="recent-card" onclick="loadNote('${n.id}')">
+      <div class="recent-dot"></div>
+      <div class="recent-info">
+        <div class="recent-name">${n.title}</div>
+        <div class="recent-sub">${n.subject ? n.subject + ' · ' : ''}${n.date}</div>
+      </div>
     </div>`).join('');
 }
 
@@ -414,17 +880,43 @@ function loadNote(id) {
   const note = savedNotes.find(n => n.id === id);
   if (!note) return;
   document.getElementById('notes-input').value = note.notes || '';
+  updateWordCount();
   showScreen('enhance');
-  renderResults(note, note.notes || '');
+  if (note.summary || note.flashcards || note.quiz) {
+    currentData = note; currentNotes = note.notes || '';
+    quizAnswered = {}; quizTotal = note.quiz?.length || 0;
+    renderResults(note, note.notes || '');
+  }
 }
 
 function deleteNote(id) {
-  if (!confirm('Delete this note?')) return;
+  if (!confirm(t('deleteConfirm'))) return;
   savedNotes = savedNotes.filter(n => n.id !== id);
   localStorage.setItem('saved_notes', JSON.stringify(savedNotes));
-  updateCounts();
   renderSaved();
+  renderRecent();
 }
+
+function showModal() { document.getElementById('limit-modal').style.display = 'flex'; }
+function closeModal() { document.getElementById('limit-modal').style.display = 'none'; }
+
+function joinWaitlist() {
+  const email = document.getElementById('waitlist-email').value.trim();
+  if (!email) { alert(lang === 'ja' ? 'メールアドレスを入力してください。' : 'Please enter your email.'); return; }
+  window.location.href = `mailto:${EMAIL}?subject=Note Enhancer Waitlist&body=Please add me to the waitlist: ${email}`;
+  closeModal();
+}
+
+function sendFeedback() {
+  const type = document.getElementById('feedback-type').value;
+  const text = document.getElementById('feedback-text').value.trim();
+  if (!text) { alert(lang === 'ja' ? 'フィードバックを入力してください。' : 'Please enter your feedback.'); return; }
+  const subject = `Note Enhancer Feedback: ${type}`;
+  window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(text)}`;
+  closeModal();
+}
+
+applyLang();
 </script>
 </body>
 </html>
